@@ -1,15 +1,37 @@
-<!-- YOU CAN DELETE EVERYTHING IN THIS PAGE -->
+<script lang="ts">
+	import { ProgressRadial } from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
 
-<div class="container h-full mx-auto flex justify-center items-center">
-	<div class="space-y-5">
-		<h1 class="h1">Let's get cracking bones!</h1>
-		<p>Start by exploring:</p>
-		<ul>
-			<li><code class="code">/src/routes/+layout.svelte</code> - barebones layout</li>
-			<li><code class="code">/src/app.postcss</code> - app wide css</li>
-			<li>
-				<code class="code">/src/routes/+page.svelte</code> - this page, you can replace the contents
-			</li>
-		</ul>
-	</div>
+	let question: App.Question;
+
+	const generateQuestion = async () => {
+		const res = await fetch('/api/generate-question');
+		const data = await res.json();
+		console.log(data);
+		question = data;
+	};
+
+	onMount(generateQuestion);
+</script>
+
+<div>
+	<h1 class="h1">Card counting</h1>
+	<button on:click={generateQuestion} class="btn variant-filled-primary">Generate Question</button>
+
+	{#if question}
+		<div class="flex space-x-2">
+			<p>Dealer Upcard:</p>
+			<p>{question.dealerUpcard}</p>
+		</div>
+		<div class="flex space-x-2">
+			<p>Player Total:</p>
+			<p>{question.playerTotal}</p>
+		</div>
+		<div class="flex space-x-2">
+			<p>Answer:</p>
+			<p>{question.answer}</p>
+		</div>
+	{:else}
+		<ProgressRadial />
+	{/if}
 </div>

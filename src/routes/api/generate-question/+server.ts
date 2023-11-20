@@ -21,7 +21,12 @@ async function getRandomQuestion() {
 		}
 
 		if (question && question.length > 0) {
-			const randomQuestion = question[0];
+			const randomQuestion = {
+				dealerUpcard: question[0].dealer_upcard,
+				playerTotal: question[0].player_total,
+				answer: question[0].answer,
+			};
+			
 			return randomQuestion;
 		} else {
 			return 'No questions found.';
