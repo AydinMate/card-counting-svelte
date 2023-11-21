@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
+	import { onMount, afterUpdate } from 'svelte';
 	import axios from 'axios';
 
 	let question: App.Question;
@@ -8,39 +8,55 @@
 	let options = [
 		{
 			value: 'H',
-			text: 'Hit'
+			text: 'Hit',
+			isCorrect: false
 		},
 		{
 			value: 'S',
-			text: 'Stand'
+			text: 'Stand',
+			isCorrect: false
 		},
 		{
 			value: 'D',
-			text: 'Double/Hit'
+			text: 'Double/Hit',
+			isCorrect: false
 		},
 		{
 			value: 'DS',
-			text: 'Double/Stand'
+			text: 'Double/Stand',
+			isCorrect: false
 		}
 	];
 
 	const generateQuestion = async () => {
 		const res = await axios.get('/api/generate-question');
 		const data = await res.data;
-		console.log(data);
 		question = data;
 	};
 
 	const checkAnswer = (answer: string) => {
-		if (answer === question.answer) {
-			alert('Correct!');
-		} else {
-			alert('Incorrect!');
-		}
-		generateQuestion();
+		options.forEach(option => {
+			if (option.value === question.answer) {
+				option.isCorrect = true;
+			} else {
+				option.isCorrect = false;
+			}
+		});
+
+		console.log(options)
+		// if (answer === question.answer) {
+		// 	alert('Correct!');
+		// } else {
+		// 	alert('Incorrect!');
+		// }
+		// generateQuestion();
 	};
 
 	onMount(generateQuestion);
+
+$: {options = [...options]; }
+		
+
 </script>
 
 <div class="text-center">
@@ -61,7 +77,7 @@
 						{#each options as option}
 							<button
 								on:click={() => checkAnswer(option.value)}
-								class="btn variant-filled-primary m-2">{option.text}</button
+								class="btn {option.isCorrect ? 'variant-filled-success' : 'variant-filled-primary'} m-2">{option.text}</button
 							>
 						{/each}
 					</div>
