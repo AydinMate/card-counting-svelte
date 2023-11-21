@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Navbar from '$lib/navbar.svelte';
 	import '../app.postcss';
 
 	// Floating UI for Popups
@@ -7,4 +8,5 @@
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 </script>
 
+<Navbar />
 <slot />
